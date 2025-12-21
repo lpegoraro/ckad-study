@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: data-app
+  name: data-app
+spec:
+  containers:
+    - image: nginx:alpine
+      name: app
+      volumeMounts:
+        - name: app-pv
+          mountPath: /usr/share/nginx/html/config.txt
+  initContainers:
+    - image: busybox:1.35
+      name: data-init
+      command: ["sh", "-c", "echo 'initialized at $(date)' >> /data/config.txt"]
+      volumeMounts:
+        - name: app-pv
+          mountPath: /data
+  
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  volumes:
+    - name: app-pv
+      persistentVolumeClaim:
+        claimName: app-pvc

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: backend
+    tier: api
+  name: backend-svc
+spec:
+  ports:
+  - name: 8080-80
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: backend
+    tier: api
+  type: ClusterIP
