@@ -1,0 +1,84 @@
+{
+  "name": "ckad-study-agent",
+  "description": "Agent to help study for CKAD exams. Exposes web-search and workspace tools to VS Code Chat.",
+  "tools": [
+    {
+      "name": "web-search",
+      "description": "Search the web for CKAD and Kubernetes resources",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string", "description": "Search query" },
+          "max_results": { "type": "integer", "default": 5 }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "semantic_search",
+      "description": "Search workspace for relevant notes and code",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string" },
+          "max_results": { "type": "integer", "default": 5 }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "read_file",
+      "description": "Read a file from the workspace",
+      "parameters": {
+        "type": "object",
+        "properties": { "file_path": { "type": "string" } },
+        "required": ["file_path"]
+      }
+    },
+    {
+      "name": "apply_patch",
+      "description": "Apply a patch to a workspace file",
+      "parameters": {
+        "type": "object",
+        "properties": { "patch": { "type": "string" } },
+        "required": ["patch"]
+      }
+    },
+    {
+      "name": "run_in_terminal",
+      "description": "Run shell commands in the workspace terminal",
+      "parameters": {
+        "type": "object",
+        "properties": { "command": { "type": "string" } },
+        "required": ["command"]
+      }
+    },
+    {
+      "name": "semantic_search_workspace",
+      "description": "Alias for workspace semantic search (VS Code agent)"
+    }
+  ],
+  "commands": [
+    {
+      "name": "study",
+      "description": "Ask the agent a CKAD study question",
+      "parameters": {
+        "type": "object",
+        "properties": { "question": { "type": "string" } },
+        "required": ["question"]
+      }
+    },
+    {
+      "name": "mock_quiz",
+      "description": "Generate a mock quiz on a given topic",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "topic": { "type": "string" },
+          "count": { "type": "integer", "default": 5 }
+        },
+        "required": ["topic"]
+      }
+    }
+  ]
+}
