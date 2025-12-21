@@ -13,7 +13,7 @@ spec:
           mountPath: /usr/share/nginx/html/config.txt
   initContainers:
     - image: busybox:1.35
-      name: data-init
+      name: data-init`
       command: ["sh", "-c", "echo 'initialized at $(date)' >> /data/config.txt"]
       volumeMounts:
         - name: app-pv
