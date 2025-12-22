@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: backend
+  name: backend
+  namespace: ag-q-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - image: hashicorp/http-echo:0.2.3
+          name: http-echo
+          args:
+            - "-text=Hello from backend"
+            - "-listen=:8080"
+          ports:
+          - containerPort: 8080
