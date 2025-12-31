@@ -4,5 +4,8 @@
     "yaml.validate": true,
     "yaml.schemas": {
         "https://json.schemastore.org/kubernetes": "/*.yaml"
+    },
+    "terminal.integrated.automationProfile.linux": {
+        "path": "/usr/bin/zsh"
     }
 }
