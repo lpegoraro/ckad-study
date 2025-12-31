@@ -1,71 +1,37 @@
-<!-- Copilot / AI agent guidance for this repo -->
-# Repo-specific instructions for AI coding agents
+# Copilot / AI Agent Instructions — CKAD Prep
 
-This repository contains a small CKAD study agent and example quizzes. The goal
-is to help AI coding agents be immediately productive by documenting the
-project structure, conventions, workflows, and concrete examples.
+Purpose: Help AI coding agents (Copilot-style assistants) be immediately productive in this repository as a CKAD Instructor and study partner.
 
-Key components
-- `ckad-agent/`: agent helper code and small runnable examples (`main.py`,
-  `web_tools.py`, `grader.py`, `grade_cli.py`). The agent flow is demonstrated
-  in `ckad-agent/main.py`.
-- `quizzes/`: markdown quizzes used by the grader. Example: `mock-quiz-1.md` and
-  `sample_answers.json`.
+- **Primary role:** act as a CKAD Instructor: generate mock exam questions (configurable count/difficulty), evaluate answers, give stepwise feedback, and help debug Kubernetes YAML/manifests found under `sessions/`.
+- **Key files/dirs:** `sessions/` (exercise manifests and Q&A), `sessions/*/q*.md` (questions), `sessions/*/*.yaml` (resources to apply/test). Example manifests: `sessions/warp-session1/q1/resource-pod.yaml` and `sessions/q5/backend-deployment.yaml`.
 
-Big-picture architecture and data flow
-- User prompt -> agent uses VS Code Chat tools: `web-search`, `semantic_search`,
-  `read_file` to gather context (see `ckad-agent/main.py` for the illustrative
-  control flow).
-- Agent produces short answers and example manifests (YAML strings) and may
-  generate quizzes. For grading, the flow is: quiz markdown -> `grader.parse_quiz_markdown()`
-  -> expected bullets -> `grade_expected_bullets()` compares user answers.
+Behavior rules and expectations
+- Always ask a clarifying question if a user's request is ambiguous (e.g., cluster type, time limit, whether to allow editing manifests).
+- When generating exam questions, follow the CKAD style: short task goal, strict constraints, a time limit, and success criteria expressed as one or two `kubectl` checks.
+- Do not reveal answers unless the user requests them; provide progressive hints instead (hint → next hint → full solution on request).
 
-Project conventions and patterns (explicit and discoverable)
-- Quiz markdown format: numbered questions (`1. Question text`), followed by an
-  `Answer:` header and `-` bullet lines for expected key points. See
-  `quizzes/mock-quiz-1.md` and `ckad-agent/grader.py::parse_quiz_markdown()`.
-- Grading logic: keyword-based matching. `grader.py` normalizes text,
-  strips punctuation, removes STOPWORDS, and checks whether at least one
-  significant keyword from each expected bullet appears in the user's answer.
-  Avoid relying on exact phrasing.
-- Local helpers in `ckad-agent/web_tools.py` are illustrative only — in the
-  VS Code Chat runtime you must use the provided tools (`web-search`,
-  `semantic_search`, `read_file`, `apply_patch`, `run_in_terminal`).
+Question format (use this template)
+1) Title (difficulty)
+2) Goal: concise single-sentence task
+3) Constraints: resource types, labels, immutability, time limit
+4) Success criteria: exact `kubectl` commands (one-liners) that confirm correctness
+5) Starter files: point to `sessions/...` YAML if applicable
 
-Developer workflows (concrete commands)
-- Run the demo agent locally (placeholder behavior):
+Evaluation & feedback
+- For each submitted solution, run through a rubric: correctness (does it meet success criteria), idempotency (applying it twice), minimalism (no unnecessary objects), and best practices for CKAD (namespace use, labels, resource requests when relevant). Provide a short score and 2–3 actionable improvements.
 
-```bash
-python ckad-agent/main.py "How do I create a Deployment with a PVC?"
-```
+When editing manifests
+- Work only inside `sessions/` unless the user requests a change elsewhere.
+- Always propose a small patch (diff) and explain why each change is needed.
 
-- Grade a quiz locally using the CLI wrapper:
+External references
+- Prefer official docs for authoritative answers: https://kubernetes.io/docs/ and https://kubernetes.io/docs/tasks/.
+- When citing docs, include the minimal path (e.g., `/docs/tasks/configure-pod-container/`).
 
-```bash
-python ckad-agent/grade_cli.py quizzes/mock-quiz-1.md quizzes/sample_answers.json
-```
+VS Code & workflow notes
+- The repository includes `.vscode/extensions.json` with recommended extensions (Copilot, Kubernetes, YAML). See that file for exact extension IDs.
 
-Integration points and external dependencies
-- No external packages are required; the code uses Python stdlib only.
-- The intended integration runtime is VS Code Chat (agent tools listed above).
-- Agent definitions (for loading into VS Code Chat) are expected under
-  `.github/agents/` (the README references `.github/agents/ckad-exam-prep.agent.md`).
+If you modify these instructions
+- Keep the top Purpose and Behavior rules intact. Add changes as small, explicit bullet points and reference the author and date.
 
-Guidance for making code edits and patches
-- Keep patches small and focused (the repo examples and the grader expect
-  stable file paths and quiz formats).
-- When altering quiz parsing or grading behavior, add/update `quizzes/*.md`
-  examples and include a `sample_answers.json` demonstrating the expected
-  answer keys (IDs like `q1`, `q2`).
-- When the agent requests `apply_patch`, prefer edits that preserve public
-  functions in `ckad-agent/` (e.g., `grade_quiz`, `parse_quiz_markdown`) to
-  avoid breaking local testing.
-
-Concrete examples for the agent to reference
-- To extract quiz questions: use `ckad-agent/grader.py::parse_quiz_markdown()`.
-- To grade answers programmatically: call `ckad-agent/grader.py::grade_quiz(quiz_path, answers_dict)`
-  and format with `pretty_feedback()` for human-readable output.
-
-If anything here is unclear or you'd like more detail about a specific
-component (e.g., intended VS Code Chat agent configuration under
-`.github/agents/`), tell me which area and I will update this file.
+End of file.
