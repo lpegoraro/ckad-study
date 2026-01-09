@@ -1,0 +1,21 @@
+# Starter: minimal ConfigMap + Pod (edit to complete the task)
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  APP_MODE: debug
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-demo
+spec:
+  containers:
+  - name: app
+    image: busybox
+    command: ["sleep", "3600"]
+    envFrom:
+    - configMapRef:
+        name: app-config

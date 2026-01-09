@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: config-demo
+  name: config-demo
+  namespace: quiz1-q2
+spec:
+  containers:
+    - image: busybox
+      name: config-demo
+      env:
+      - name: APP_MODE
+        valueFrom:
+          configMapKeyRef:
+            name: app-config
+            key: APP_MODE
+      command: ["sleep", "3600"]
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always

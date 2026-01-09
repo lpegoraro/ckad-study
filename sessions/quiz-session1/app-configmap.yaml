@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  APP_MODE: debug
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: quiz1-q2
